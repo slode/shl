@@ -1,5 +1,5 @@
-#ifndef SHL_TEST_CONTEST_H
-#define SHL_TEST_CONTEST_H
+#ifndef SHL_TEST_TEST_H
+#define SHL_TEST_TEST_H
 
 #include <string>
 #include <sstream>
@@ -72,15 +72,15 @@ public:
   }
 };
 
-template<typename T>
-bool compare(T a, T b) {return a == b;}
+template<typename T, typename S>
+bool compare(T a, S b) {return a == b;}
 
 template<typename T>
 bool is_true(T a) {return a ? true : false;}
 
 }} // ends namespace shl::test
 
-#define CONTEST_SUITE(suite_name)               \
+#define SHL_TEST_SUITE(suite_name)               \
 using namespace shl::test;                      \
 TestSuite* TestSuite::instance_ = 0;      \
 void test_suite_initialize() {                  \
@@ -89,7 +89,7 @@ void test_suite_initialize() {                  \
 namespace { /* Isolates the test-case */        \
 
 
-#define CONTEST_SUITE_END                       \
+#define SHL_TEST_SUITE_END                       \
 }                                               \
 int main(int argc, char **argv) {               \
   (void)argc;                                   \
@@ -98,7 +98,7 @@ int main(int argc, char **argv) {               \
   return TestSuite::get()->run_tests();      \
 }                                               \
 
-#define CONTEST_CASE(test_name)                 \
+#define SHL_TEST_CASE(test_name)                 \
 class test_name : public Test {              \
 public:                                         \
   test_name(): Test(#test_name)              \
@@ -110,24 +110,29 @@ public:                                         \
 void test_name::do_run()                        \
 
 
-#define CONTEST_EQUAL(a, b)                     \
+#define SHL_TEST_EQUAL(a, b)                     \
 do {                                            \
-  if (!compare((a), (b))) {                     \
+  auto da = (a);                                \
+  auto db = (b);                                \
+  if (!compare(da, db)) {                       \
       std::ostringstream oss;                   \
       oss << " [" << #a << " != " << #b << "] ";\
+      oss << " [" << da << " != " << db << "] ";\
       oss << __FILE__ << ": " << __LINE__;      \
       throw TestException(oss.str());        \
   }                                             \
 } while(0);                                     \
 
-#define CONTEST_TRUE(a)                         \
+#define SHL_TEST_TRUE(a)                        \
 do {                                            \
-  if (!is_true((a))) {                          \
+  auto da = (a);                                \
+  if (!is_true(da)) {                           \
       std::ostringstream oss;                   \
       oss << " [" << #a << " != true] ";        \
+      oss << " [" << da << " != true] ";        \
       oss << __FILE__ << ": " << __LINE__;      \
       throw TestException(oss.str());        \
   }                                             \
 } while(0);                                     \
 
-#endif // SHL_TEST_CONTEST_H
+#endif // SHL_TEST_TEST_H

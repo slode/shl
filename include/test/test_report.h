@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-namespace shl { namespace test {
+namespace shl { namespace test {
 class TestReportIface {
 public:
   virtual void test_suite_init(const std::string &suite_name) = 0;
@@ -22,7 +22,7 @@ public:
     std::cout << "Test suite [" << suite_name << "]" << std::endl;
   };
   virtual void test_case_init(const std::string &test_name) {
-    std::cout << "Testing " << test_name << " ";
+    std::cout << "Test case " << test_name << " ";
   };
   virtual void success(const std::string &status) {
     std::cout << "OK! " << status;
