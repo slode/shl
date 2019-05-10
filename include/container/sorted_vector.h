@@ -42,7 +42,7 @@ public:
     return result.value;
   }
 
-  void remove(size_t index) {
+  void erase(size_t index) {
     size_t found = binary_search(buffer, index);
     TypeWrapper& result = buffer.at(found);
     if (result.index == index) {

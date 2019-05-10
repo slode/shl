@@ -46,7 +46,7 @@ SHL_TEST_CASE(Delete) {
   vec.insert(8, Position{8.0, 1.0});
 
   SHL_TEST_EQUAL(vec.size(), 2);
-  vec.remove(7);
+  vec.erase(7);
   SHL_TEST_EQUAL(vec.size(), 1);
 }
 SHL_TEST_SUITE_END
