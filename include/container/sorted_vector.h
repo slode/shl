@@ -46,7 +46,7 @@ public:
     size_t found = binary_search(buffer, index);
     TypeWrapper& result = buffer.at(found);
     if (result.index == index) {
-      buffer.erase(buffer.begin() + found)
+      buffer.erase(buffer.begin() + found);
     }
   }
 
