@@ -61,6 +61,9 @@ public:
       } catch(const TestException &e) {
         reporter->failure(e.what());
         errors++;
+      } catch(const std::exception &e) {
+        reporter->error(e.what());
+        errors++;
       } catch(...) {
         reporter->error("Unknown exception thrown.");
         errors++;
@@ -82,35 +85,35 @@ bool is_true(T a) {return a ? true : false;}
 
 #define SHL_TEST_SUITE(suite_name)               \
 using namespace shl::test;                      \
-TestSuite* TestSuite::instance_ = 0;      \
+TestSuite* TestSuite::instance_ = 0;            \
 void test_suite_initialize() {                  \
-  TestSuite::get()->set_name(#suite_name);   \
+  TestSuite::get()->set_name(#suite_name);      \
 }                                               \
 namespace { /* Isolates the test-case */        \
 
 
-#define SHL_TEST_SUITE_END                       \
+#define SHL_TEST_SUITE_END                      \
 }                                               \
 int main(int argc, char **argv) {               \
   (void)argc;                                   \
   (void)argv;                                   \
   test_suite_initialize();                      \
-  return TestSuite::get()->run_tests();      \
+  return TestSuite::get()->run_tests();         \
 }                                               \
 
-#define SHL_TEST_CASE(test_name)                 \
-class test_name : public Test {              \
+#define SHL_TEST_CASE(test_name)                \
+class test_name : public Test {                 \
 public:                                         \
-  test_name(): Test(#test_name)              \
-  { TestSuite::get()->register_test(         \
-      reinterpret_cast<Test*>(this)); }      \
+  test_name(): Test(#test_name)                 \
+  { TestSuite::get()->register_test(            \
+      reinterpret_cast<Test*>(this)); }         \
                                                 \
   virtual void do_run();                        \
 } test_name ## instance;                        \
 void test_name::do_run()                        \
 
 
-#define SHL_TEST_EQUAL(a, b)                     \
+#define SHL_TEST_EQUAL(a, b)                    \
 do {                                            \
   auto da = (a);                                \
   auto db = (b);                                \
@@ -119,7 +122,7 @@ do {                                            \
       oss << " [" << #a << " != " << #b << "] ";\
       oss << " [" << da << " != " << db << "] ";\
       oss << __FILE__ << ": " << __LINE__;      \
-      throw TestException(oss.str());        \
+      throw TestException(oss.str());           \
   }                                             \
 } while(0);                                     \
 
@@ -131,8 +134,21 @@ do {                                            \
       oss << " [" << #a << " != true] ";        \
       oss << " [" << da << " != true] ";        \
       oss << __FILE__ << ": " << __LINE__;      \
-      throw TestException(oss.str());        \
+      throw TestException(oss.str());           \
   }                                             \
+} while(0);                                     \
+
+#define SHL_TEST_RAISE(a, exc)                  \
+do {                                            \
+  try {                                         \
+      auto da = (a);                            \
+      std::ostringstream oss;                   \
+      oss << " [" << #a;                        \
+      oss << " failed to raise ";               \
+      oss << #exc << "] ";                      \
+      oss << __FILE__ << ": " << __LINE__;      \
+      throw TestException(oss.str());           \
+  } catch (const exc&) { /* */ }                \
 } while(0);                                     \
 
 #endif // SHL_TEST_TEST_H

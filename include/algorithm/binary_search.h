@@ -43,10 +43,10 @@ THE SOFTWARE.
 
 namespace shl { namespace algorithm {
 
-template<class T>
-int binary_search(const std::vector<T> &arr, const T key) {
+template<class T, class S>
+int binary_search(const std::vector<T> &arr, const S &key) {
   const unsigned n = arr.size();
-  if (n < 2) return 0;
+  if (n < 1) return 0;
   if (arr[n-1] < key) return n;
 
   unsigned step = 1 << bsr(n-1);

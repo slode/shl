@@ -27,4 +27,29 @@ SHL_TEST_CASE(InsertTest) {
 
   SHL_TEST_EQUAL(vec.get(2), 0);
 }
+
+SHL_TEST_CASE(GetTest) {
+  IndexedVector<int, int> vec;
+  vec.insert(3, 4);
+  vec.insert(1, 9);
+  vec.insert(0, 2);
+
+  SHL_TEST_EQUAL(vec.get(3), 4);
+  SHL_TEST_EQUAL(vec.get(0), 2);
+  SHL_TEST_EQUAL(vec.get(1), 9);
+  SHL_TEST_EQUAL(vec.get(3), 4);
+}
+
+SHL_TEST_CASE(EraseTest) {
+  IndexedVector<int, int> vec;
+  vec.insert(3, 4);
+  vec.insert(1, 9);
+  vec.insert(0, 2);
+
+  SHL_TEST_EQUAL(vec.get(3), 4);
+  SHL_TEST_EQUAL(vec.size(), 3);
+  vec.erase(2);
+//  SHL_TEST_EQUAL(vec.size(), 2);
+
+}
 SHL_TEST_SUITE_END

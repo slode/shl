@@ -22,7 +22,7 @@ public:
     std::cout << "Test suite [" << suite_name << "]" << std::endl;
   };
   virtual void test_case_init(const std::string &test_name) {
-    std::cout << "Test case " << test_name << " ";
+    std::cout << " * Test case [" << test_name << "] ";
   };
   virtual void success(const std::string &status) {
     std::cout << "OK! " << status;
