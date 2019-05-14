@@ -1,8 +1,9 @@
 #ifndef SHL_TEST_TEST_REPORT_H
 #define SHL_TEST_TEST_REPORT_H
 
-#include <string>
+#include <chrono>
 #include <iostream>
+#include <string>
 
 namespace shl { namespace test {
 class TestReportIface {
@@ -17,11 +18,20 @@ public:
 };
 
 class ConsoleReport: public TestReportIface {
+  using clock = std::chrono::high_resolution_clock;
+
+  typedef clock::time_point clock_type;
+  typedef std::chrono::duration<double, std::milli> dur;
+  
+  clock_type test_suite_time;
+  clock_type test_case_time;
 public:
   virtual void test_suite_init(const std::string &suite_name) {
+    test_suite_time = clock::now();
     std::cout << "Test suite [" << suite_name << "]" << std::endl;
   };
   virtual void test_case_init(const std::string &test_name) {
+    test_case_time = clock::now();
     std::cout << " * Test case [" << test_name << "] ";
   };
   virtual void success(const std::string &status) {
@@ -34,10 +44,10 @@ public:
     std::cout << "Error! " << status;
   };
   virtual void test_case_end() {
-    std::cout << std::endl;
+    std::cout << "in " << dur(clock::now() - test_case_time).count() << " ms" << std::endl;
   };
   virtual void test_suite_end() {
-    std::cout << std::endl;
+    std::cout << "in " << dur(clock::now() - test_suite_time).count() << " ms" << std::endl;
   };
 };
 

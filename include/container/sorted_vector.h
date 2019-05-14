@@ -100,7 +100,10 @@ public:
     }
   };
 
-  SortedVector() :m_buffer(){};
+  SortedVector() : m_buffer() {};
+  SortedVector(size_type size) : m_buffer() {
+      m_buffer.reserve(size);
+  };
   ~SortedVector() {};
 
   iterator begin() { return iterator(*this, 0); }
