@@ -103,21 +103,11 @@ public:
   SortedVector() :m_buffer(){};
   ~SortedVector() {};
 
-  iterator begin() {
-    return iterator(*this, 0);
-  }
+  iterator begin() { return iterator(*this, 0); }
+  iterator end() { return iterator(*this, m_buffer.size()); }
 
-  iterator end() {
-    return iterator(*this, m_buffer.size());
-  }
-
-  const_iterator begin() const {
-    return const_iterator(*this, 0);
-  }
-
-  const_iterator end() const {
-    return const_iterator(*this, m_buffer.size());
-  }
+  const_iterator begin() const { return const_iterator(*this, 0); }
+  const_iterator end() const { return const_iterator(*this, m_buffer.size()); }
 
   void insert(size_t id, const T &value) {
     size_t found = binary_search(m_buffer, id);
@@ -145,8 +135,6 @@ public:
   size_t size() {
     return m_buffer.size();
   }
-
-
 
 private:
   ValueVector m_buffer;
