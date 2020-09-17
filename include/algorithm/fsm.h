@@ -48,15 +48,18 @@ public:
 
 class Machine {
   typedef std::queue<const EventBase*> EventQueue;
+  typedef std::vector<const StateBase*> StateStack;
   typedef std::pair<const StateBase*, const EventBase*> EventPair;
   typedef std::map<const EventPair, StateBase*> TransitionMap;
 
   StateBase *currentState{0};
+  StateStack stack;
   EventQueue eventQueue;
 protected:
   TransitionMap transitions;
 
   virtual void setState(StateBase *state) {
+    if (state == currentState) return;
     if (currentState) currentState->exit(this);
     currentState = state;
     if (currentState) currentState->enter(this);
@@ -69,13 +72,14 @@ public:
     eventQueue.push(event);
   }
 
-  virtual void defineTransition(const StateBase *from, const EventBase *event, StateBase *to) {
+  virtual void defineTransition(
+      const StateBase *from,
+      const EventBase *event,
+      StateBase *to) {
     transitions[std::make_pair(from, event)] = to;
   }
 
   virtual void update() {
-    if (currentState) currentState->update(this);
-
     if (!eventQueue.empty()) {
       try {
         setState(transitions.at(std::make_pair(currentState, eventQueue.front())));
@@ -83,11 +87,12 @@ public:
         try {
           setState(transitions.at(std::make_pair(currentState, nullptr)));
         } catch (const std::out_of_range &e) {
-          setState(transitions.at(std::make_pair(nullptr, nullptr)));
+          //setState(transitions.at(std::make_pair(nullptr, nullptr)));
         }
       }
       eventQueue.pop();
     }
+    if (currentState) currentState->update(this);
   }
 };
 }}

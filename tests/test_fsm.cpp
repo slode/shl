@@ -22,6 +22,7 @@ class On: public State <On>{
   int counter{0};
 public:
   void enter(Machine *m) {
+    TRACE
   }
   void update(Machine* m) {
     TRACE
@@ -29,6 +30,9 @@ public:
       m->signal(TurnOn::id());
     if (counter++ > 2)
       m->signal(TurnOff::id());
+  }
+  void exit(Machine *m) {
+    TRACE
   }
 };
 
