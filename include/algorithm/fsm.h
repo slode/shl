@@ -48,14 +48,11 @@ public:
 
 class Machine {
   typedef std::queue<const EventBase*> EventQueue;
-  typedef std::vector<const StateBase*> StateStack;
   typedef std::pair<const StateBase*, const EventBase*> EventPair;
   typedef std::map<const EventPair, StateBase*> TransitionMap;
 
   StateBase *currentState{0};
-  StateStack stack;
   EventQueue eventQueue;
-protected:
   TransitionMap transitions;
 
   virtual void setState(StateBase *state) {
@@ -94,5 +91,10 @@ public:
     }
     if (currentState) currentState->update(this);
   }
+};
+
+class StackMachine: public Machine {
+  typedef std::vector<const StateBase*> StateStack;
+  StateStack stack;
 };
 }}
