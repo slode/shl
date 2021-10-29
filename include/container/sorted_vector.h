@@ -139,6 +139,22 @@ public:
     return m_buffer.size();
   }
 
+  reference front() {
+    return m_buffer.front();
+  }
+
+  const reference front() const {
+    return m_buffer.front();
+  }
+
+  reference back() {
+    return m_buffer.back();
+  }
+
+  const reference back() const {
+    return m_buffer.back();
+  }
+
 private:
   ValueVector m_buffer;
 };

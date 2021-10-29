@@ -3,10 +3,7 @@
 #pragma once
 
 #include <algorithm>
-#include <cstddef>
-#include <memory>
 #include <vector>
-#include <iostream>
 
 namespace shl { namespace container {
 
@@ -16,6 +13,8 @@ public:
 
   typedef T value_type;
   typedef S size_type;
+  typedef std::vector<T> value_vector;
+	typedef std::vector<S> index_vector;
 
   IndexedVector() noexcept = default;
   IndexedVector(IndexedVector &&) = default;
@@ -29,7 +28,7 @@ public:
     set.index_.swap(index_);
   }
 
-  void insert(const size_type pos, value_type value)
+  void insert(const size_type pos, const value_type& value)
   {
     if (pos >= index_.size())
       index_.resize(pos + 1);
@@ -47,7 +46,7 @@ public:
   };
 
   value_type& get(const size_type pos) {
-    if (pos > index_.size() || !(index_[pos] & used))
+    if (pos >= index_.size() || !(index_[pos] & used))
       insert(pos, value_type());
 
     const size_type data_pos = index_[pos] >> 1;
@@ -57,7 +56,7 @@ public:
   // TODO
   void erase(size_type pos) {
     // Element is not present
-    if (pos > index_.size() || !(index_[pos] & used)) {
+    if (pos >= index_.size() || !(index_[pos] & used)) {
       return;
     }
     
@@ -85,12 +84,57 @@ public:
     return index_.size();
   };
 
-  bool test(value_type val);
+  class IndexIterator {
+    IndexedVector &m_indexedVector;
+    size_type m_pos;
 
+    void scan() {
+      while (m_pos < m_indexedVector.expanse() && !(m_indexedVector.index_[m_pos] & m_indexedVector.used)) {
+        m_pos++;
+      }
+    }
+  public:
+    IndexIterator(IndexedVector &ivec, size_type pos)
+      : m_indexedVector(ivec), m_pos(pos) { scan(); }
+
+    value_type& operator*() {
+
+      size_type data_pos = m_indexedVector.index_[m_pos] >> 1;
+      return m_indexedVector.data_[data_pos];
+    }
+
+    IndexIterator& operator++() {
+      m_pos++;
+      scan();
+      return *this;
+    }
+
+    IndexIterator operator++(int) {
+      IndexIterator clone(*this);
+      m_pos++;
+      scan();
+      return clone;
+    }
+    
+    bool operator==(const IndexIterator &other) {
+      return &m_indexedVector == &other.m_indexedVector 
+             && m_pos == other.m_pos;
+    }
+    
+    bool operator!=(const IndexIterator &other) {
+      return !(*this == other);
+    }
+  };
+
+  IndexIterator ordered_begin() { return IndexIterator(*this, 0); } 
+  IndexIterator ordered_end() { return IndexIterator(*this, index_.size()); } 
+
+  typename value_vector::iterator begin() { return data_.begin(); }
+  typename value_vector::iterator end() { return data_.end(); }
 
 private:
-  std::vector<value_type> data_;
-	std::vector<size_type> index_;
+  value_vector data_;
+	index_vector index_;
   static const size_type used = 0x1;
 };
 }}

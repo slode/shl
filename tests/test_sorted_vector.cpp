@@ -95,7 +95,7 @@ SHL_TEST_CASE(Benchmark) {
 
   SortedVector<Position> vec;
 
-  size_t N = 1000000;
+  size_t N = 10000;
   for (size_t i = 0; i < N; i++) {
     vec.insert(i, Position{float(i), float(i)});
     SHL_TEST_EQUAL(vec.at(i).x, float(i));
@@ -104,7 +104,7 @@ SHL_TEST_CASE(Benchmark) {
 }
 
 SHL_TEST_CASE(BenchmarkReserve) {
-  size_t N = 1000000;
+  size_t N = 10000;
   SortedVector<Position> vec(N);
 
   for (size_t i = 0; i < N; i++) {
@@ -115,7 +115,7 @@ SHL_TEST_CASE(BenchmarkReserve) {
 }
 
 SHL_TEST_CASE(BenchmarkReverse) {
-  size_t N = 5000;
+  size_t N = 10000;
   SortedVector<Position> vec;
   for (size_t i = N; i > 0; i--) {
     vec.insert(i, Position{float(i), float(i)});
